@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+  <configuration>
+  	<settings>
+  	
+  		<setting name="mapUnderscoreToCamelCase" value="true" />
+  		
+  		<!-- parameter로 빈 값 보낼 경우 -->
+  		<setting name="jdbcTypeForNull" value="NULL" />
+  		
+  	</settings>
+  	<typeAliases>
+  		<package name="com.yedam.java" />
+  		<!-- <package name="com.yedam.java.**.mapper" /> -->
+  	</typeAliases>
+  </configuration>
+  	
+  	
