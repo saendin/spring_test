@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+				 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 별칭을 만들어 사용. -> namespace="EmpMapper" -->
+<mapper namespace="com.yedam.java.emp.mapper.EmpMapper"> 
+
+<!-- getEmpList에 매핑 될 select문 생성
+	 resultType을 List타입으로 안해줘도 되는 이유 : select된 값에 따라 알아서 list로 가져옴  -->
+	<!-- 전체조회 -->
+	<select id="getEmpList" resultType="EmpVO">
+		SELECT * 
+		FROM employees
+		<where>
+			<if test="departmentId != null">
+				department_id = #{ departmentId },
+			</if>
+			<if test="managerId != null">
+				manager_id = #{ managerId }
+			</if>
+		</where>
+	</select>
+	<!-- 단건조회 -->
+	<select id="getEmp" parameterType="EmpVO" resultType="EmpVO">
+		SELECT employee_id,
+			   first_name,
+			   last_name,
+			   <if test="!employeeId.equals('100')">
+			   	email,
+			   </if>
+			   hire_date,
+			   job_id,
+			   salary
+		FROM employees
+		WHERE employee_id = #{ employeeId }
+	</select>
+	<!-- 사원등록 -->
+	<insert id="insertEmp" parameterType="EmpVO">
+	<!-- insert, update -->
+		<selectKey keyProperty="employeeId" resultType="String" order="BEFORE">
+			SELECT MAX(employee_id)+1 FROM employees
+		</selectKey>
+		INSERT INTO employees (employee_id, first_name, last_name, email, hire_date, job_id, salary)
+		VALUES (#{ employeeId }, #{ firstName }, #{ lastName }, #{ email }, sysdate, #{ jobId }, #{ salary })
+	</insert>
+	<!-- 연봉수정 -->	
+	<update id="updateSalary" parameterType="Integer">
+		UPDATE employees
+		SET salary = salary * 1.1
+		<!--WHERE employee_id = #{ employeeId }-->
+		<!-- 인터페이스의 메소드에서 param 값으로 매개변수 넘길경우 -->
+		WHERE employee_id = #{ empId }
+	</update>
+	<update id="updateEmpInfo" parameterType="EmpVO">
+		UPDATE employees
+		<!--
+		SET first_name = #{ firstName },
+			last_name = #{ lastName },
+			email = #{ email }
+		-->
+		<!-- UPDATE SET할 것들에 if조건문을 주어 해당 값의 업데이트 유무를 결정 하게끔 만듦 -->
+		<!-- 아래의 <set>은 그냥 SET 으로도 사용 가능하다.
+					그러나 if문이 정확히 어디서 쓰여야하는지 구분하기 위해
+					명시적으로 <set>으로 써주기로 한다. -->
+		<set> 
+			<if test="firstName != null">
+				first_name = #{ firstName },
+			</if>
+			<if test="lastName != null">
+				last_name = #{ lastName },
+			</if>
+			<if test="email != null">
+				email = #{ email }
+			</if>
+		</set>
+		WHERE employee_id = #{ employeeId }
+	</update>
+	<!-- 사원삭제 -->
+	<delete id="deleteEmp">
+		DELETE FROM employees
+		WHERE employee_id = # { employeeId }
+	</delete>
+</mapper>
