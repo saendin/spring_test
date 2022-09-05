@@ -11,4 +11,7 @@ public class EmpVO {
 	String hireDate;
 	String jobId;
 	String salary;
+	String commissionPct;
+	String managerId;
+	String departmentId;
 }
