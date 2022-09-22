@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.java.todolist.mapper.TodoMapper">
+	
+	<select id="getNo" resultType="TodoVO">
+		SELECT NVL(MAX(no),0) + 1 as no FROM todo
+	</select>
+	
+	<!-- 전체 목록 -->
+	<select id="getTodolist" resultType="TodoVO">
+		SELECT * 
+		FROM todo
+	</select>
+
+	<!-- 할일등록 -->
+	<insert id="insertTodo" parameterType="TodoVO">
+		<selectKey keyProperty="no" resultType="Integer" order="BEFORE">
+			SELECT MAX(no)+1 FROM todo
+		</selectKey>
+		INSERT INTO todo (
+			no
+			,id
+			,contents
+			
+			<if test="todoyn!=null">
+				,todoyn
+			</if>
+			)
+		VALUES (
+			#{ no }
+			, 89
+			, #{ contents }
+			<if test="todoyn!=null">
+				, #{ todoyn }
+			</if>
+			)
+	</insert>
+	
+	<!-- 수정 -->
+	<update id="updateTodo" parameterType="TodoVO">
+		UPDATE todo
+		<set>
+			<if test="todoyn != null and !title.equals('')">
+				todoyn = #{ todoyn }
+			</if>
+		</set>
+		WHERE no = #{ no }
+	</update>
+	
+	<!-- 삭제 -->
+	<delete id="deleteTodo" parameterType="Integer">
+		DELETE FROM todo
+		WHERE no = #{ no }
+	</delete>
+	
+</mapper>
