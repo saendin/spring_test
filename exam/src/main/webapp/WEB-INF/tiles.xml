@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration
+2.1//EN"
+	"http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+	<!-- 내가 수 많은 뷰페이지를 만들어도 mainTemplate을 extends하기 때문에 알아서  -->
+	<definition name="mainTemplate" template="/WEB-INF/views/tiles/layout.jsp"> <!-- definition name="mainTemplate" -->
+	    <put-attribute name="title" value="app"></put-attribute>
+		<put-attribute name="header" value="/WEB-INF/views/tiles/header.jsp" /> <!-- 헤더주관 -->
+		<put-attribute name="content" value="/WEB-INF/views/tiles/content.jsp" /> <!-- 내용주관 -->
+	</definition>
+	
+	<definition name="home" extends="mainTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/home.jsp" />
+	</definition>
+	
+<!-- 	<definition name="admin/*/*" template="/WEB-INF/views/tiles/admin_layout.jsp">
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp" />
+	</definition> -->
+	
+	<definition name="*/*" extends="mainTemplate"> <!-- extends="mainTemplate" -->
+		<put-attribute name="content" value="/WEB-INF/views/{1}/{2}.jsp" /> <!-- 이 페이지의 name값을 "content"로 주면 extends하는 mainTemplate중의 name이 똑같은 content인 값을 찾아들어가서, 그 페이지 대신 이 페이지를 보여주게 만드는 원리 -->
+													<!-- {1}/{2}는 <definition name="*/*"의 "*"순서를 말함. -->
+													<!-- /WEB-INF/view/board/list.jsp -->
+														
+	</definition>
+
+	
+</tiles-definitions>
+
+
+<!--
+	1. Controller에 매핑한 경로와 <definition name속성 중 같은 값이 있는지 먼저 체크(or "/")
+	2. <definition name="*/*" extends값은 다른 definition을 상속받는다는 의미. 그러므로 extends와 같은 이름의 definition name이 있는지 다시 위에서 부터 체크
+	
+-->
